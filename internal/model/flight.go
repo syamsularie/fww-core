@@ -12,3 +12,9 @@ type Flight struct {
 	ArrivalTime          time.Time `json:"arrival_date_time"`
 	SeatCapacity         int       `json:"seat_capacity"`
 }
+
+type FlightByCriteriaRequest struct {
+	DepartureAirportCode string `json:"departure_airport_code"`
+	ArrivalAirportCode   string `json:"arrival_airport_code"`
+	DepartureDate        string `json:"departure_date"`
+}

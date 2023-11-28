@@ -115,6 +115,7 @@ func main() {
 	app.Post("/flights", flightHandler.CreateFlight)
 	app.Put("/flights/:id", flightHandler.UpdateFlight)
 	app.Delete("/flights/:id", flightHandler.DeleteFlight)
+	app.Get("/flight/search", flightHandler.GetFlightsByCriteria)
 
 	//Airline Routes
 	app.Get("/airlines", airlineHandler.GetAllAirlines)
