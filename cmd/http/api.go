@@ -37,17 +37,29 @@ func main() {
 	flightRepo := repository.FlightRepository(repository.FlightRepository{
 		DB: db,
 	})
+
+	airlineRepo := repository.AirlineRepository(repository.AirlineRepository{
+		DB: db,
+	})
 	//=== repository lists end ===//
 
 	//=== usecase lists start ===//
 	flightUsecase := usecase.NewFlightUsecase(&usecase.FlightUsecase{
 		FlightRepo: flightRepo,
 	})
+
+	airlineUsecase := usecase.NewAirlineUsecase(&usecase.AirlineUsecase{
+		AirlineRepo: airlineRepo,
+	})
 	//=== usecase lists end ===//
 
 	//=== handler lists start ===//
-	handler := handler.NewFlightHandler(handler.Flight{
+	flightHandler := handler.NewFlightHandler(handler.Flight{
 		FlightUsecase: flightUsecase,
+	})
+
+	airlineHandler := handler.NewAirlineHandler(handler.Airline{
+		AirlineUsecase: airlineUsecase,
 	})
 	//=== handler lists end ===//
 	app := fiber.New(fiber.Config{
@@ -74,11 +86,14 @@ func main() {
 	app.Get("/healthz", Healthz)
 
 	//Flight Routes
-	app.Get("/flights", handler.GetAllFlights)
-	app.Get("/flights/:id", handler.GetFlightByID)
-	app.Post("/flights", handler.CreateFlight)
-	app.Put("/flights/:id", handler.UpdateFlight)
-	app.Delete("/flights/:id", handler.DeleteFlight)
+	app.Get("/flights", flightHandler.GetAllFlights)
+	app.Get("/flights/:id", flightHandler.GetFlightByID)
+	app.Post("/flights", flightHandler.CreateFlight)
+	app.Put("/flights/:id", flightHandler.UpdateFlight)
+	app.Delete("/flights/:id", flightHandler.DeleteFlight)
+
+	//Airline Routes
+	app.Get("/airlines", airlineHandler.GetAllAirlines)
 
 	//=== listen port ===//
 	if err := app.Listen(fmt.Sprintf(":%s", "3000")); err != nil {
