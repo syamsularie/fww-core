@@ -49,6 +49,10 @@ func main() {
 	seatRepo := repository.SeatRepository(repository.SeatRepository{
 		DB: db,
 	})
+
+	passengerRepo := repository.PassengerRepository(repository.PassengerRepository{
+		DB: db,
+	})
 	//=== repository lists end ===//
 
 	//=== usecase lists start ===//
@@ -67,6 +71,10 @@ func main() {
 	seatUsecase := usecase.NewSeatUsecase(&usecase.SeatUsecase{
 		SeatRepo: seatRepo,
 	})
+
+	passengerUsecase := usecase.NewPassengerUsecase(&usecase.PassengerUsecase{
+		PassengerRepo: passengerRepo,
+	})
 	//=== usecase lists end ===//
 
 	//=== handler lists start ===//
@@ -84,6 +92,10 @@ func main() {
 
 	seatHandler := handler.NewSeatHandler(handler.Seat{
 		SeatUsecase: seatUsecase,
+	})
+
+	passengerHandler := handler.NewPassengerHandler(handler.Passenger{
+		PassengerUsecase: passengerUsecase,
 	})
 	//=== handler lists end ===//
 	app := fiber.New(fiber.Config{
@@ -126,6 +138,9 @@ func main() {
 	//Seat Routes
 	app.Get("/seats/available/:flight_id", seatHandler.GetAvailableSeatByFlightId)
 	app.Get("/seats/:flight_id", seatHandler.GetAllSeatByFlightId)
+
+	//Passenger Routes
+	app.Get("/passengers/:id", passengerHandler.GetPassengerById)
 
 	//=== listen port ===//
 	if err := app.Listen(fmt.Sprintf(":%s", "3000")); err != nil {
