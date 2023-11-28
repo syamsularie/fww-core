@@ -141,6 +141,7 @@ func main() {
 
 	//Passenger Routes
 	app.Get("/passengers/:id", passengerHandler.GetPassengerById)
+	app.Post("/passengers", passengerHandler.CreatePassenger)
 
 	//=== listen port ===//
 	if err := app.Listen(fmt.Sprintf(":%s", "3000")); err != nil {

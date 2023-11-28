@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fww-core/internal/model"
 	"fww-core/internal/usecase"
 	"strconv"
 
@@ -13,6 +14,7 @@ type Passenger struct {
 
 type PassengerHandler interface {
 	GetPassengerById(c *fiber.Ctx) error
+	CreatePassenger(c *fiber.Ctx) error
 }
 
 func NewPassengerHandler(handler Passenger) PassengerHandler {
@@ -29,4 +31,20 @@ func (handler *Passenger) GetPassengerById(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(passenger)
+}
+
+func (handler *Passenger) CreatePassenger(c *fiber.Ctx) error {
+	var passenger model.Passenger
+	if err := c.BodyParser(&passenger); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	id, err := handler.PassengerUsecase.CreatePassenger(&passenger)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	passenger.PassengerID = id
+
+	return c.Status(fiber.StatusCreated).JSON(passenger)
 }
