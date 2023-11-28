@@ -37,17 +37,53 @@ func main() {
 	flightRepo := repository.FlightRepository(repository.FlightRepository{
 		DB: db,
 	})
+
+	airlineRepo := repository.AirlineRepository(repository.AirlineRepository{
+		DB: db,
+	})
+
+	airportRepo := repository.AirportRepository(repository.AirportRepository{
+		DB: db,
+	})
+
+	seatRepo := repository.SeatRepository(repository.SeatRepository{
+		DB: db,
+	})
 	//=== repository lists end ===//
 
 	//=== usecase lists start ===//
 	flightUsecase := usecase.NewFlightUsecase(&usecase.FlightUsecase{
 		FlightRepo: flightRepo,
 	})
+
+	airlineUsecase := usecase.NewAirlineUsecase(&usecase.AirlineUsecase{
+		AirlineRepo: airlineRepo,
+	})
+
+	airportUsecase := usecase.NewAirportUsecase(&usecase.AirportUsecase{
+		AirportRepo: airportRepo,
+	})
+
+	seatUsecase := usecase.NewSeatUsecase(&usecase.SeatUsecase{
+		SeatRepo: seatRepo,
+	})
 	//=== usecase lists end ===//
 
 	//=== handler lists start ===//
-	handler := handler.NewFlightHandler(handler.Flight{
+	flightHandler := handler.NewFlightHandler(handler.Flight{
 		FlightUsecase: flightUsecase,
+	})
+
+	airlineHandler := handler.NewAirlineHandler(handler.Airline{
+		AirlineUsecase: airlineUsecase,
+	})
+
+	airportHandler := handler.NewAirportHandler(handler.Airport{
+		AirportUsecase: airportUsecase,
+	})
+
+	seatHandler := handler.NewSeatHandler(handler.Seat{
+		SeatUsecase: seatUsecase,
 	})
 	//=== handler lists end ===//
 	app := fiber.New(fiber.Config{
@@ -74,11 +110,22 @@ func main() {
 	app.Get("/healthz", Healthz)
 
 	//Flight Routes
-	app.Get("/flights", handler.GetAllFlights)
-	app.Get("/flights/:id", handler.GetFlightByID)
-	app.Post("/flights", handler.CreateFlight)
-	app.Put("/flights/:id", handler.UpdateFlight)
-	app.Delete("/flights/:id", handler.DeleteFlight)
+	app.Get("/flights", flightHandler.GetAllFlights)
+	app.Get("/flights/:id", flightHandler.GetFlightByID)
+	app.Post("/flights", flightHandler.CreateFlight)
+	app.Put("/flights/:id", flightHandler.UpdateFlight)
+	app.Delete("/flights/:id", flightHandler.DeleteFlight)
+	app.Get("/flight/search", flightHandler.GetFlightsByCriteria)
+
+	//Airline Routes
+	app.Get("/airlines", airlineHandler.GetAllAirlines)
+
+	//Airport Routes
+	app.Get("/airports", airportHandler.GetAllAirports)
+
+	//Seat Routes
+	app.Get("/seats/available/:flight_id", seatHandler.GetAvailableSeatByFlightId)
+	app.Get("/seats/:flight_id", seatHandler.GetAllSeatByFlightId)
 
 	//=== listen port ===//
 	if err := app.Listen(fmt.Sprintf(":%s", "3000")); err != nil {

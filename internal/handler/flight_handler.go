@@ -17,6 +17,7 @@ type FlightaHandler interface {
 	CreateFlight(c *fiber.Ctx) error
 	UpdateFlight(c *fiber.Ctx) error
 	DeleteFlight(c *fiber.Ctx) error
+	GetFlightsByCriteria(c *fiber.Ctx) error
 }
 
 func NewFlightHandler(handler Flight) FlightaHandler {
@@ -88,4 +89,19 @@ func (handler *Flight) DeleteFlight(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusNoContent).JSON(nil)
+}
+
+func (handler *Flight) GetFlightsByCriteria(c *fiber.Ctx) error {
+	var flightRequest model.FlightByCriteriaRequest
+
+	if err := c.BodyParser(&flightRequest); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	flight, err := handler.FlightUsecase.GetFlightsByCriteria(flightRequest.DepartureAirportCode, flightRequest.ArrivalAirportCode, flightRequest.DepartureDate)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.JSON(flight)
 }

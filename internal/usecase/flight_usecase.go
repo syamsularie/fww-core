@@ -16,6 +16,7 @@ type FlightExecutor interface {
 	CreateFlight(flight *model.Flight) (string, error)
 	UpdateFlight(flight *model.Flight) error
 	DeleteFlight(id string) error
+	GetFlightsByCriteria(departureAirportCode, arrivalAirportCode string, date string) ([]model.Flight, error)
 }
 
 // NewFlightUsecase creates a new instance of FlightUsecase
@@ -53,4 +54,8 @@ func (uc *FlightUsecase) UpdateFlight(flight *model.Flight) error {
 func (uc *FlightUsecase) DeleteFlight(id string) error {
 
 	return uc.FlightRepo.DeleteFlight(id)
+}
+
+func (uc *FlightUsecase) GetFlightsByCriteria(departureAirportCode, arrivalAirportCode string, date string) ([]model.Flight, error) {
+	return uc.FlightRepo.GetFlightsByCriteria(departureAirportCode, arrivalAirportCode, date)
 }
