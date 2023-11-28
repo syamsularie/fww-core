@@ -45,6 +45,10 @@ func main() {
 	airportRepo := repository.AirportRepository(repository.AirportRepository{
 		DB: db,
 	})
+
+	seatRepo := repository.SeatRepository(repository.SeatRepository{
+		DB: db,
+	})
 	//=== repository lists end ===//
 
 	//=== usecase lists start ===//
@@ -59,6 +63,10 @@ func main() {
 	airportUsecase := usecase.NewAirportUsecase(&usecase.AirportUsecase{
 		AirportRepo: airportRepo,
 	})
+
+	seatUsecase := usecase.NewSeatUsecase(&usecase.SeatUsecase{
+		SeatRepo: seatRepo,
+	})
 	//=== usecase lists end ===//
 
 	//=== handler lists start ===//
@@ -72,6 +80,10 @@ func main() {
 
 	airportHandler := handler.NewAirportHandler(handler.Airport{
 		AirportUsecase: airportUsecase,
+	})
+
+	seatHandler := handler.NewSeatHandler(handler.Seat{
+		SeatUsecase: seatUsecase,
 	})
 	//=== handler lists end ===//
 	app := fiber.New(fiber.Config{
@@ -109,6 +121,10 @@ func main() {
 
 	//Airport Routes
 	app.Get("/airports", airportHandler.GetAllAirports)
+
+	//Seat Routes
+	app.Get("/seats/available/:flight_id", seatHandler.GetAvailableSeatByFlightId)
+	app.Get("/seats/:flight_id", seatHandler.GetAllSeatByFlightId)
 
 	//=== listen port ===//
 	if err := app.Listen(fmt.Sprintf(":%s", "3000")); err != nil {
