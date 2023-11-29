@@ -47,6 +47,14 @@ CREATE TABLE seats (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE passenger_seats (
+    passenger_seat_id INT AUTO_INCREMENT PRIMARY KEY,
+    seat_id INT ,
+    passenger_id INT,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS baggage (
     bagage_id INT AUTO_INCREMENT PRIMARY KEY,
     passenger_name VARCHAR(255),
@@ -76,11 +84,14 @@ INSERT INTO flights (flight_number, airline_code, departure_airport_code, arriva
 -- CREATE TABLE reservations (
 --     reservation_id INT AUTO_INCREMENT PRIMARY KEY,
 --     flight_number VARCHAR(10),
---     passenger_id BIGINT,
+--     passenger_id INT,
 --     seat_number INT,
 --     price DECIMAL(10, 2) NOT NULL,
+--     instance_key BIGINT,
 -- 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 -- );
+
+
 -- CREATE TABLE payments (
 --     payment_id INT AUTO_INCREMENT PRIMARY KEY,
 --     reservation_id INT NOT NULL,
