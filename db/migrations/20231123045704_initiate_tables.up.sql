@@ -41,7 +41,7 @@ CREATE TABLE flights (
 CREATE TABLE seats (
     seat_id INT AUTO_INCREMENT PRIMARY KEY,
     seat_number VARCHAR(3),
-    flight_number VARCHAR(10),
+    flight_id INT,
     is_available BOOLEAN,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -54,6 +54,24 @@ CREATE TABLE IF NOT EXISTS baggage (
     weight_kg DECIMAL(5, 2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- data airports
+INSERT INTO airports (airport_code, airport_name) VALUES ("UPG", "Makassar");
+INSERT INTO airports (airport_code, airport_name) VALUES ("CGK", "Jakarta");
+INSERT INTO airports (airport_code, airport_name) VALUES ("JYP", "Jayapura");
+INSERT INTO airports (airport_code, airport_name) VALUES ("SMG", "Semarang");
+
+-- data airlines
+INSERT INTO airlines (airline_code, airline_name) VALUES ("SG1", "Singa Air");
+INSERT INTO airlines (airline_code, airline_name) VALUES ("AY1", "Ayam Air");
+INSERT INTO airlines (airline_code, airline_name) VALUES ("BB1", "Bebek Air");
+
+
+-- data flights
+INSERT INTO flights (flight_number, airline_code, departure_airport_code, arrival_airport_code, departure_date_time, arrival_date_time, seat_capacity) VALUES ("JT2", "SG1", "SMG", "CGK", "2023-11-23 21:50:39", "2023-11-23 23:50:39", 200);
+INSERT INTO flights (flight_number, airline_code, departure_airport_code, arrival_airport_code, departure_date_time, arrival_date_time, seat_capacity) VALUES ("UD1", "AY1", "UPG", "CGK", "2023-11-23 21:50:39", "2023-11-23 23:50:39", 200);
+INSERT INTO flights (flight_number, airline_code, departure_airport_code, arrival_airport_code, departure_date_time, arrival_date_time, seat_capacity) VALUES ("JT2", "SG1", "JYP", "UPG", "2023-11-23 21:50:39", "2023-11-23 23:50:39", 200);
+
 
 -- CREATE TABLE reservations (
 --     reservation_id INT AUTO_INCREMENT PRIMARY KEY,
