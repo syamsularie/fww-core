@@ -138,6 +138,7 @@ func main() {
 	//Seat Routes
 	app.Get("/seats/available/:flight_id", seatHandler.GetAvailableSeatByFlightId)
 	app.Get("/seats/:flight_id", seatHandler.GetAllSeatByFlightId)
+	app.Post("/seats/reserve/:id", seatHandler.ReserveSeat)
 
 	//Passenger Routes
 	app.Get("/passengers/:id", passengerHandler.GetPassengerById)

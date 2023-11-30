@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fww-core/internal/model"
 	"fww-core/internal/usecase"
 	"strconv"
 
@@ -14,6 +15,7 @@ type Seat struct {
 type SeatHandler interface {
 	GetAvailableSeatByFlightId(c *fiber.Ctx) error
 	GetAllSeatByFlightId(c *fiber.Ctx) error
+	ReserveSeat(c *fiber.Ctx) error
 }
 
 func NewSeatHandler(handler Seat) SeatHandler {
@@ -38,4 +40,25 @@ func (handler *Seat) GetAllSeatByFlightId(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 	return c.JSON(seats)
+}
+
+func (handler *Seat) ReserveSeat(c *fiber.Ctx) error {
+	var passengerSeat model.PassengerSeat
+	if err := c.BodyParser(&passengerSeat); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	seatIdString := c.Params("id")
+	seatId, _ := strconv.Atoi(seatIdString)
+
+	passengerSeat.SeatID = seatId
+
+	id, err := handler.SeatUsecase.SavePassengerSeats(passengerSeat.SeatID, passengerSeat.PassengerID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	passengerSeat.PassengerSeatID = id
+
+	return c.Status(fiber.StatusCreated).JSON(passengerSeat)
 }

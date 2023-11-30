@@ -12,6 +12,7 @@ type SeatRepository struct {
 type SeatPersister interface {
 	GetAvailableSeatByFlightId(flightId int) ([]model.Seat, error)
 	GetAllSeatByFlightId(flightId int) ([]model.Seat, error)
+	SavePassengerSeats(seatID, passengerID int) (int, error)
 }
 
 func NewSeatRepository(seat SeatRepository) SeatPersister {
@@ -54,4 +55,15 @@ func (repo *SeatRepository) GetAllSeatByFlightId(flightId int) ([]model.Seat, er
 	}
 
 	return Seats, nil
+}
+
+func (repo *SeatRepository) SavePassengerSeats(seatID, passengerID int) (int, error) {
+	result, err := repo.DB.Exec("INSERT INTO passenger_seats (seat_id, passenger_id) VALUES (?, ?)", seatID, passengerID)
+	if err != nil {
+		return 0, err
+	}
+
+	id, _ := result.LastInsertId()
+
+	return int(id), nil
 }
