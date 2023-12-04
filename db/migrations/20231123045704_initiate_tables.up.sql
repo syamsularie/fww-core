@@ -4,6 +4,7 @@ CREATE TABLE passengers (
     email VARCHAR(100) NOT NULL UNIQUE,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
+    ktp VARCHAR(20) NOT NULL,
     phone_number VARCHAR(15),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -81,35 +82,10 @@ INSERT INTO flights (flight_number, airline_code, departure_airport_code, arriva
 INSERT INTO flights (flight_number, airline_code, departure_airport_code, arrival_airport_code, departure_date_time, arrival_date_time, seat_capacity) VALUES ("JT2", "SG1", "JYP", "UPG", "2023-11-23 21:50:39", "2023-11-23 23:50:39", 200);
 
 
--- CREATE TABLE reservations (
---     reservation_id INT AUTO_INCREMENT PRIMARY KEY,
---     flight_number VARCHAR(10),
---     passenger_id INT,
---     seat_number INT,
---     price DECIMAL(10, 2) NOT NULL,
---     instance_key BIGINT,
--- 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
--- );
-
-
--- CREATE TABLE payments (
---     payment_id INT AUTO_INCREMENT PRIMARY KEY,
---     reservation_id INT NOT NULL,
---     amount DECIMAL(10, 2) NOT NULL,
---     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     payment_status VARCHAR(20) NOT NULL,
---     payment_method VARCHAR(50),
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
--- );
-
-
 -- ALTER TABLE flights ADD CONSTRAINT fk_airline_code FOREIGN KEY (airline_code) REFERENCES airlines(airline_code);
 -- ALTER TABLE flights ADD CONSTRAINT fk_departure_airport_code FOREIGN KEY (departure_airport_code) REFERENCES airports(airport_code);
 -- ALTER TABLE flights ADD CONSTRAINT fk_arival_airport_code FOREIGN KEY (arrival_airport_code) REFERENCES airports(airport_code);
 
 -- ALTER TABLE seats ADD CONSTRAINT fk_flight_number2 FOREIGN KEY (flight_number) REFERENCES flights(flight_number);
 
--- ALTER TABLE reservations ADD CONSTRAINT fk_flight_number FOREIGN KEY (flight_number) REFERENCES flights(flight_number);
--- ALTER TABLE reservations ADD CONSTRAINT fk_passenger_id FOREIGN KEY (passenger_id) REFERENCES passengers(passenger_id);
-
--- ALTER TABLE payments ADD CONSTRAINT fk_reservation_id FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id);
+-- ALTER TABLE passenger_seats ADD CONSTRAINT fk_passenger_seat FOREIGN KEY (seat_id) REFERENCES seat(seat_id);
