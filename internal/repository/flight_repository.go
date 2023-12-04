@@ -47,10 +47,10 @@ func (repo *FlightRepository) GetAllFlights() ([]model.Flight, error) {
 
 // GetFlightByID retrieves a flight by its ID from the database
 func (repo *FlightRepository) GetFlightByID(id string) (*model.Flight, error) {
-	row := repo.DB.QueryRow("SELECT flight_number, airline_code, departure_airport_code, arrival_airport_code, seat_capacity FROM flights WHERE flight_number = ?", id)
+	row := repo.DB.QueryRow("SELECT flight_number, airline_code, departure_airport_code, arrival_airport_code, seat_capacity, departure_date_time, arrival_date_time FROM flights WHERE flight_number = ?", id)
 
 	var flight model.Flight
-	err := row.Scan(&flight.FlightNumber, &flight.AirlineCode, &flight.DepartureAirportCode, &flight.ArrivalAirportCode, &flight.SeatCapacity)
+	err := row.Scan(&flight.FlightNumber, &flight.AirlineCode, &flight.DepartureAirportCode, &flight.ArrivalAirportCode, &flight.SeatCapacity, &flight.DepartureTime, &flight.ArrivalTime)
 	if err != nil {
 		return nil, err
 	}
